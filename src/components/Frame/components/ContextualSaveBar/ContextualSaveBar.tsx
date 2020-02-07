@@ -84,6 +84,7 @@ export function ContextualSaveBar({
       loading={saveAction.loading}
       disabled={saveAction.disabled}
       accessibilityLabel={saveAction.content}
+      connectedDisclosure={saveAction.connectedDisclosure}
     >
       {saveActionContent}
     </Button>
