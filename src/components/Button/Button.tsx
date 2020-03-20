@@ -249,17 +249,14 @@ export function Button({
       'Polaris.Button.connectedDisclosureAccessibilityLabel',
     );
 
-    const {
-      disabled,
-      accessibilityLabel: disclosureLabel = defaultLabel,
-    } = connectedDisclosure;
+    const {disabled, accessibilityLabel = defaultLabel} = connectedDisclosure;
 
     const connectedDisclosureActivator = (
       <button
         type="button"
         className={connectedDisclosureClassName}
         disabled={disabled}
-        aria-label={disclosureLabel}
+        aria-label={accessibilityLabel}
         onClick={toggleDisclosureActive}
         onMouseUp={handleMouseUpByBlurring}
       >

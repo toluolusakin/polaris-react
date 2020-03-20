@@ -15,7 +15,7 @@ export interface TitleProps {
   subtitle?: string;
   /** Important and non-interactive status information shown immediately after the title. (stand-alone app use only) */
   titleMetadata?: React.ReactNode;
-  /** thumbnail that precedes the title */
+  /** Thumbnail image that precedes the title */
   thumbnail?:
     | React.ReactElement<AvatarProps | ThumbnailProps>
     | React.SFC<React.SVGProps<SVGSVGElement>>;

@@ -245,7 +245,12 @@ Use when there is only one primary action but other related actions can be taken
         saveAction={{
           content: 'Save',
           connectedDisclosure: {
-            actions: [{content: 'Save as draft'}],
+            actions: [
+              {
+                content: 'Save as draft',
+                onAction: () => {},
+              },
+            ],
           },
           loading: false,
           disabled: false,
