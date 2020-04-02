@@ -2,6 +2,7 @@ import React from 'react';
 import {addParameters, addDecorator} from '@storybook/react';
 import {setConsoleOptions} from '@storybook/addon-console';
 import {withContexts} from '@storybook/addon-contexts/react';
+import {DocsPage, DocsContainer} from '@storybook/addon-docs/blocks';
 import {color, withKnobs} from '@storybook/addon-knobs';
 import DefaultThemeColors from '@shopify/polaris-tokens/dist-modern/theme/base.json';
 
@@ -11,6 +12,10 @@ import enTranslations from '../locales/en.json';
 addParameters({
   options: {
     // showRoots: true,
+  },
+  docs: {
+    container: DocsContainer,
+    page: DocsPage,
   },
   percy: {
     skip: true,

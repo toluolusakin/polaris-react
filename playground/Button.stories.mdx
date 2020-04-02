@@ -1,0 +1,40 @@
+import { Meta, Story, Preview } from '@storybook/addon-docs/blocks';
+import { Button } from '../src/components/Button';
+
+<Meta title="Playground|Playground/MDX Button" component={Button} />
+
+# Button
+
+With `MDX` we can define a story for `Button` right in the middle of our
+markdown documentation.
+
+We can write sume bulleted lists:
+
+- Item one
+- Item two
+
+
+## Subheadings
+
+They're a thing.
+
+
+```jsx
+function Demo() {
+  return <div>Hi I am a sample code block</div>
+}
+```
+
+## Examples
+
+### Default Button
+
+Oh and of course define stories we can define a story while we have some
+exposition text here:
+
+
+<Preview>
+  <Story name="Default Button">
+      <Button>Hi There</Button>
+  </Story>
+</Preview>

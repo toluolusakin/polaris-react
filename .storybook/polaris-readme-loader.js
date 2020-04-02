@@ -92,8 +92,18 @@ AllExamples.story = {
     .filter((key) => key.startsWith(HOOK_PREFIX))
     .join(', ');
 
+  const docStyles = `
+.sb-polarisdoc h1 { font-size: 2em; margin-bottom: 0.67em; }
+.sb-polarisdoc h2 { font-size: 1.5em; margin-bottom: 0.83em; }
+.sb-polarisdoc h3 { font-size: 1.17em; margin-bottom: 1em; }
+.sb-polarisdoc h4 { font-size: 1em; margin-bottom: 1.33em; }
+
+.sb-polarisdoc p { margin-bottom: 1em; }
+`;
+
   return `
 import React, {${hooks}} from 'react';
+import { Meta, Story, Preview, assertIsFn, AddContext } from "@storybook/addon-docs/blocks";
 import {withA11y} from '@storybook/addon-a11y';
 // In production mode webpack shakes this away, so explitly include it.
 // The following import can be removed in v5, where global CSS has been removed:
@@ -246,7 +256,23 @@ import {
   ViewMinor,
 } from '@shopify/polaris-icons';
 
-export default { title: ${JSON.stringify(`All Components|${readme.name}`)} };
+export default {
+  title: ${JSON.stringify(`All Components|${readme.name}`)},
+  component: Button,
+  parameters: {
+    docs: {
+      // page: () => <AddContext mdxStoryNameToKey={{"Default Button":"defaultButton"}} mdxComponentMeta={componentMeta}><MDXContent /></AddContext>,
+      page: () => {
+        return React.createElement('div', {
+          className: "sb-polarisdoc",
+          dangerouslySetInnerHTML: {__html: ${JSON.stringify(
+            `<style>${docStyles}</style>${readme.docHtml}`,
+          )}}
+        });
+      }
+    },
+  }
+};
 
 ${csfExports.join('\n\n')}
 `;
@@ -282,6 +308,7 @@ function parseCodeExamples(data) {
 
   return {
     name: matter.data.name,
+    docHtml: new MdParser().parse(matter.content),
     category: matter.data.category,
     examples: generateExamples(matter),
     omitAppProvider: matter.data.omitAppProvider || false,
