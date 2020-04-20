@@ -1,0 +1,73 @@
+@import '../../styles/common';
+
+.ListBox {
+  @include unstyled-list;
+}
+
+.Option {
+  @include unstyled-list;
+  padding: spacing(tight) spacing();
+  cursor: pointer;
+
+  &:hover {
+    @include state(hover);
+  }
+
+  &.focused {
+    @include state(focused);
+
+    &:hover {
+      @include state(focused, hover);
+    }
+  }
+
+  &.disabled {
+    @include state(disabled);
+
+    .Media {
+      @include recolor-icon(color('ink', 'lightest'), color('white'));
+    }
+  }
+
+  &.selected {
+    @include state(selected);
+
+    &.focused {
+      @include state(selected, focused);
+
+      &:hover {
+        @include state(selected, focused, hover);
+      }
+    }
+  }
+}
+
+.InlinePopoverWrapper {
+  position: relative;
+}
+
+.InlinePopoverOverlay {
+  position: absolute;
+  width: 100%;
+  margin-top: spacing(extra-tight);
+  transition: opacity duration('slow') easing('base');
+  will-change: opacity;
+}
+
+.InlinePopoverOverlay-hidden {
+  opacity: 0;
+}
+
+.InlinePopoverOverlay-visible {
+  opacity: 1;
+}
+
+.InlinePopover {
+  border-radius: border-radius();
+  background-color: color('white');
+  box-shadow: shadow(deep);
+}
+
+.Scrollable {
+  max-height: 300px;
+}

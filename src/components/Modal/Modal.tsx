@@ -276,7 +276,7 @@ class ModalInner extends React.Component<CombinedProps, State> {
 
       const labelledBy = title ? this.headerId : undefined;
 
-      dialog = (
+      dialog = memo(
         <Dialog
           instant={instant}
           labelledBy={labelledBy}
@@ -289,7 +289,7 @@ class ModalInner extends React.Component<CombinedProps, State> {
           {headerMarkup}
           <div className={styles.BodyWrapper}>{bodyMarkup}</div>
           {footerMarkup}
-        </Dialog>
+        </Dialog>,
       );
 
       backdrop = <Backdrop />;

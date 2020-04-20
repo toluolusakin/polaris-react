@@ -13,6 +13,9 @@ export type {AppProviderProps} from './AppProvider';
 export {Autocomplete} from './Autocomplete';
 export type {AutocompleteProps} from './Autocomplete';
 
+export {ComboBox} from './ComboBox';
+export type {ComboBoxProps} from './ComboBox';
+
 export {Avatar} from './Avatar';
 export type {AvatarProps} from './Avatar';
 
@@ -154,6 +157,9 @@ export type {LinkProps} from './Link';
 
 export {List} from './List';
 export type {ListProps} from './List';
+
+export {ListBox} from './ListBox';
+export type {ListBoxProps} from './ListBox';
 
 export {Loading} from './Loading';
 export type {LoadingProps} from './Loading';

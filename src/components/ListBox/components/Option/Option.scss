@@ -1,0 +1,53 @@
+@import '../../../../styles/common';
+
+.Option {
+  @include unstyled-list;
+  padding: spacing(tight) spacing();
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+
+  &:hover {
+    @include state(hover);
+  }
+
+  &:focus {
+    // pseudo class will only happen on mouse click
+    outline: none;
+  }
+
+  &.active {
+    outline: none;
+    @include state(focused);
+
+    &:hover {
+      @include state(focused, hover);
+    }
+  }
+
+  &.disabled {
+    @include state(disabled);
+  }
+
+  &.selected {
+    @include state(selected);
+
+    &.focused {
+      @include state(selected, focused);
+
+      &:hover {
+        @include state(selected, focused, hover);
+      }
+    }
+  }
+}
+
+.Content {
+  flex: 1 1 auto;
+}
+
+.Checkmark {
+  display: flex;
+  flex: 0 0 auto;
+  align-content: center;
+}

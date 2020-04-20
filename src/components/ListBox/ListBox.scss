@@ -1,0 +1,9 @@
+@import '../../styles/common';
+
+.ListBox {
+  @include unstyled-list;
+  &:focus {
+    outline: none;
+    box-shadow: inset rem(2px) 0 0 color('sky');
+  }
+}

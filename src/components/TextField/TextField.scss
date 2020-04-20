@@ -153,6 +153,17 @@ $stacking-order: (
   padding-right: 0;
 }
 
+.TypeAheadInput {
+  position: absolute;
+  flex: none;
+  color: var(--p-text-disabled-on-surface, color('ink', 'lightest'));
+  background-color: transparent;
+
+  .hasValue & {
+    color: var(--p-text-disabled-on-surface, color('ink', 'lightest'));
+  }
+}
+
 .Input-alignRight {
   text-align: right;
 }

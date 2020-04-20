@@ -42,6 +42,8 @@ interface NonMutuallyExclusiveProps {
   placeholder?: string;
   /** Initial value for the input */
   value?: string;
+  /** Initial value for the input */
+  typeAheadText?: string;
   /** Additional hint text to display */
   helpText?: React.ReactNode;
   /** Label for the input */
@@ -126,6 +128,7 @@ export function TextField({
   suffix,
   placeholder,
   value,
+  typeAheadText,
   helpText,
   label,
   labelAction,
@@ -367,7 +370,9 @@ export function TextField({
     labelledBy.push(`${id}Suffix`);
   }
 
-  labelledBy.unshift(labelID(id));
+  if (labelledBy.length) {
+    labelledBy.unshift(labelID(id));
+  }
 
   const inputClassName = classNames(
     styles.Input,
@@ -375,6 +380,38 @@ export function TextField({
     suffix && styles['Input-suffixed'],
     clearButton && styles['Input-hasClearButton'],
   );
+
+  const typeAheadInputClassName =
+    typeAheadText &&
+    classNames(
+      styles.Input,
+      styles.TypeAheadInput,
+      align && styles[variationName('Input-align', align)],
+      suffix && styles['Input-suffixed'],
+    );
+
+  const getTypeAheadInput = useCallback(() => {
+    const typeAheadTextBeginsWithValue =
+      typeAheadText &&
+      value &&
+      typeAheadText.toLowerCase().startsWith(value.toLowerCase(), 0);
+
+    const typeAheadTextValue =
+      typeAheadText && typeAheadTextBeginsWithValue && value
+        ? value + typeAheadText.substr(value.length)
+        : null;
+
+    return typeAheadTextValue ? (
+      <input
+        className={typeAheadInputClassName}
+        readOnly
+        tabIndex={-1}
+        value={typeAheadTextValue}
+      />
+    ) : null;
+  }, [typeAheadInputClassName, typeAheadText, value]);
+
+  const typeAheadInput = typeAheadText ? getTypeAheadInput() : null;
 
   const input = React.createElement(multiline ? 'textarea' : 'input', {
     name,
@@ -402,7 +439,7 @@ export function TextField({
     pattern,
     type: inputType,
     'aria-describedby': describedBy.length ? describedBy.join(' ') : undefined,
-    'aria-labelledby': labelledBy.join(' '),
+    'aria-labelledby': labelledBy.length ? labelledBy.join(' ') : undefined,
     'aria-invalid': Boolean(error),
     'aria-owns': ariaOwns,
     'aria-activedescendant': ariaActiveDescendant,
@@ -434,6 +471,7 @@ export function TextField({
           onClick={handleClick}
         >
           {prefixMarkup}
+          {typeAheadInput}
           {input}
           {suffixMarkup}
           {characterCountMarkup}
@@ -448,6 +486,7 @@ export function TextField({
 
   function handleClearButtonPress() {
     onClearButtonClick && onClearButtonClick(id);
+    !onClearButtonClick && onChange && onChange('', id);
   }
 
   function handleKeyPress(event: React.KeyboardEvent) {
