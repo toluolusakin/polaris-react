@@ -4,15 +4,23 @@ import commonjs from '@rollup/plugin-commonjs';
 import nodeResolve from '@rollup/plugin-node-resolve';
 import replace from '@rollup/plugin-replace';
 import babel from 'rollup-plugin-babel';
-import externals from 'rollup-plugin-node-externals';
 
 import packageJSON from '../../package.json';
 
-import {stylesStandalone} from './plugins/styles-standalone-modern';
-import {stylesEsNext} from './plugins/styles-esnext-modern';
-import {images} from './plugins/images-modern';
+import {stylesStandalone} from './plugins/styles-standalone';
+import {stylesEsNext} from './plugins/styles-esnext';
+import {images} from './plugins/images';
 
 const root = resolve(__dirname, '../..');
+
+const externalPackages = [
+  ...Object.keys(packageJSON.dependencies),
+  ...Object.keys(packageJSON.peerDependencies),
+];
+
+function external(id) {
+  return externalPackages.some((aPackage) => id.startsWith(aPackage));
+}
 
 function plugins(browserslist) {
   const babelWebPresetOptions = {
@@ -26,11 +34,6 @@ function plugins(browserslist) {
       '{{POLARIS_VERSION}}': packageJSON.version,
       '<%= POLARIS_VERSION %>': packageJSON.version,
       delimiters: ['', ''],
-    }),
-    externals({
-      packagePath: `${__dirname}../../../package.json`,
-      deps: true,
-      peerDeps: true,
     }),
     nodeResolve({
       extensions: ['.js', '.jsx', '.ts', '.tsx'],
@@ -70,6 +73,7 @@ export default [
       ...plugins(),
       stylesStandalone({output: 'styles.css'}),
     ],
+    external,
   },
   {
     input: `${root}/src/index.ts`,
@@ -79,5 +83,6 @@ export default [
       ...plugins('extends @shopify/browserslist-config/latest-evergreen'),
       stylesEsNext(),
     ],
+    external,
   },
 ];

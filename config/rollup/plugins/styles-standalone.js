@@ -14,7 +14,7 @@ import cssModulesValues from 'postcss-modules-values';
 import Parser from 'postcss-modules-parser';
 import postcssShopify from 'postcss-shopify';
 
-import {getNamespacedClassName} from '../namespaced-classname-modern';
+import {getNamespacedClassName} from '../namespaced-classname';
 
 const renderSass = promisify(nodeSass.render);
 

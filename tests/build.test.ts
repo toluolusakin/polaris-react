@@ -17,11 +17,6 @@ describe('build', () => {
     execSync('yarn run build');
   });
 
-  it('generates CDN files in ./build', () => {
-    expect(fs.existsSync('./build/polaris.css')).toBe(true);
-    expect(fs.existsSync('./build/polaris.min.css')).toBe(true);
-  });
-
   it('generates lib files in ./', () => {
     expect(fs.existsSync('./index.js')).toBe(true);
     expect(fs.existsSync('./index.es.js')).toBe(true);
@@ -64,42 +59,40 @@ describe('build', () => {
   });
 
   it('replaces occurrences of POLARIS_VERSION', () => {
-    const files = glob.sync('./build/**/*.{js,scss,css}', {
-      ignore: './build/cache/**',
-    });
+    const initialValue = {
+      withTemplate: [],
+      withString: [],
+    } as {withTemplate: string[]; withString: string[]};
 
-    const total = files.reduce((acc, file) => {
-      const contents = fs.readFileSync(file, 'utf-8');
-      return acc + Number(contents.includes('POLARIS_VERSION'));
-    }, 0);
-    expect(total).toBe(0);
-  });
+    const results = glob
+      .sync('./{index.*,styles.*,esnext/**/*.{js,css,scss},styles/**/*.scss}')
+      .reduce((result, file) => {
+        const contents = fs.readFileSync(file, 'utf-8');
 
-  it('features the version of Polaris in compiled files', () => {
-    const files = glob.sync('./build/**/*.{js,scss,css}', {
-      ignore: './build/cache/**',
-    });
-    const total = files.reduce((acc, file) => {
-      const contents = fs.readFileSync(file, 'utf-8');
-      return acc + Number(contents.includes(packageJSON.version));
-    }, 0);
-    expect(total).toBe(5);
-  });
+        if (contents.includes('POLARIS_VERSION')) {
+          result.withTemplate.push(file);
+        }
 
-  it('features the version of Polaris in those specific files', () => {
-    const globFiles = [
-      'polaris.css',
-      'polaris.es.js',
-      'polaris.js',
-      'polaris.min.css',
-      'styles/components.scss',
-    ].join(',');
-    const files = glob.sync(`./build/{${globFiles}}`);
-    const total = files.reduce((acc, file) => {
-      const contents = fs.readFileSync(file, 'utf-8');
-      return acc + Number(contents.includes(packageJSON.version));
-    }, 0);
-    expect(total).toBe(5);
+        if (contents.includes(packageJSON.version)) {
+          result.withString.push(file);
+        }
+
+        return result;
+      }, initialValue);
+
+    const expectedFiles = [
+      './esnext/components/AppProvider/AppProvider.processed.scss',
+      './esnext/configure.js',
+      './index.es.js',
+      './index.js',
+      './styles.css',
+      './styles.min.css',
+      './styles/components.scss',
+    ];
+
+    expect(results.withTemplate).toStrictEqual([]);
+
+    expect(results.withString).toStrictEqual(expectedFiles);
   });
 
   describe('esnext', () => {
@@ -114,28 +107,22 @@ describe('build', () => {
       ).toMatch('class Collapsible');
     });
 
-    it('preserves jsx to give consumers control over Babel transforms', () => {
+    it('converts jsx so we have control over Babel transforms', () => {
       expect(
         fs.readFileSync('esnext/components/Stack/Stack.js', 'utf8'),
-      ).toMatch(/return <div .+?<\/div>/);
+      ).not.toMatch(/return <div .+?<\/div>/);
     });
 
     it('provides scss files', () => {
-      expect(fs.existsSync('esnext/components/Stack/Stack.scss')).toBe(true);
+      expect(
+        fs.existsSync('esnext/components/Stack/Stack.processed.scss'),
+      ).toBe(true);
     });
 
     it('preserves CSS class names to give consumers control over minification', () => {
       expect(
-        fs.readFileSync('esnext/components/Stack/Stack.scss', 'utf8'),
+        fs.readFileSync('esnext/components/Stack/Stack.processed.scss', 'utf8'),
       ).toMatch('.Stack');
-    });
-
-    it('preserves ES script imports', () => {
-      const contents = fs.readFileSync(
-        'esnext/components/Avatar/index.js',
-        'utf8',
-      );
-      expect(contents).toMatch("export * from './Avatar'");
     });
 
     it('preserves ES scss imports', () => {
@@ -143,7 +130,9 @@ describe('build', () => {
         'esnext/components/Avatar/Avatar.js',
         'utf8',
       );
-      expect(indexContents).toMatch("import styles from './Avatar.scss';");
+      expect(indexContents).toMatch(
+        "import styles from './Avatar.processed.scss';",
+      );
     });
 
     it('gives consumers control over global.scss', () => {
