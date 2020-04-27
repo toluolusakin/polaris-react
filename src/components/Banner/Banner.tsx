@@ -171,20 +171,25 @@ export class Banner extends React.PureComponent<BannerProps, State> {
 
             const buttonSizeValue = withinContentContainer ? 'slim' : undefined;
 
+            const primaryActionMarkup = action ? (
+              <div className={styles.PrimaryAction}>
+                {buttonFrom(action, {outline: true, size: buttonSizeValue})}
+              </div>
+            ) : null;
+
             const secondaryActionMarkup = secondaryAction
               ? secondaryActionFrom(secondaryAction)
               : null;
 
-            const actionMarkup = action ? (
-              <div className={styles.Actions}>
-                <ButtonGroup>
-                  <div className={styles.PrimaryAction}>
-                    {buttonFrom(action, {outline: true, size: buttonSizeValue})}
-                  </div>
-                  {secondaryActionMarkup}
-                </ButtonGroup>
-              </div>
-            ) : null;
+            const actionMarkup =
+              primaryActionMarkup || secondaryActionMarkup ? (
+                <div className={styles.Actions}>
+                  <ButtonGroup>
+                    {primaryActionMarkup}
+                    {secondaryActionMarkup}
+                  </ButtonGroup>
+                </div>
+              ) : null;
 
             let contentMarkup = null;
             let contentID: string | undefined;
