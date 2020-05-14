@@ -1,4 +1,4 @@
-import {Action, ConnectedDisclosure} from '../../types';
+import type {Action, ConnectedDisclosure} from '../../types';
 
 interface ContextualSaveBarAction {
   /** A destination to link to */
