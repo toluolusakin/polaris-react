@@ -3,8 +3,12 @@ import React from 'react';
 import {mountWithAppProvider} from 'test-utilities/legacy';
 import * as geometry from '@shopify/javascript-utilities/geometry';
 
+import {ContextualSaveBarContext} from '../../../utilities/contextualsavebar-context';
 import {EventListener} from '../../EventListener';
-import {PositionedOverlay} from '../PositionedOverlay';
+import {
+  PositionedOverlay,
+  CONTEXTUAL_SAVE_BAR_ZINDEX,
+} from '../PositionedOverlay';
 import * as mathModule from '../utilities/math';
 
 describe('<PositionedOverlay />', () => {
@@ -96,6 +100,20 @@ describe('<PositionedOverlay />', () => {
 
       expect((positionedOverlay.find('div').prop('style') as any).width).toBe(
         0,
+      );
+    });
+  });
+
+  describe('context', () => {
+    it('sets the z-index to the contextual save bar z-index when within a contextual save bar', () => {
+      const positionedOverlay = mountWithAppProvider(
+        <ContextualSaveBarContext.Provider value>
+          <PositionedOverlay {...mockProps} />
+        </ContextualSaveBarContext.Provider>,
+      );
+
+      expect((positionedOverlay.find('div').prop('style') as any).zIndex).toBe(
+        CONTEXTUAL_SAVE_BAR_ZINDEX,
       );
     });
   });
