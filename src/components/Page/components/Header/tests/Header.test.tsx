@@ -98,6 +98,16 @@ describe('<Header />', () => {
       const expectedButton = buttonsFrom(primaryAction, {primary: false});
       expect(header.contains(expectedButton)).toBeTruthy();
     });
+
+    it('renders a `ReactNode`', () => {
+      const primaryAction = <div>Hello</div>;
+
+      const header = mountWithAppProvider(
+        <Header {...mockProps} primaryAction={primaryAction} />,
+      );
+
+      expect(header.contains(primaryAction)).toBeTruthy();
+    });
   });
 
   describe('pagination', () => {
