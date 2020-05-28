@@ -122,12 +122,9 @@ export function Header({
     />
   );
 
-  const primaryActionMarkup = primaryAction
-    ? getPrimaryActionMarkup(primaryAction, {
-        newDesignLanguage,
-        isNavigationCollapsed,
-      })
-    : null;
+  const primaryActionMarkup = primaryAction ? (
+    <PrimaryActionMarkup primaryAction={primaryAction} />
+  ) : null;
 
   const actionMenuMarkup =
     secondaryActions.length > 0 || hasGroupsWithActions(actionGroups) ? (
@@ -214,6 +211,42 @@ export function Header({
         {primaryActionMarkup}
       </div>
     </div>
+  );
+}
+
+function PrimaryActionMarkup({
+  primaryAction,
+}: {
+  primaryAction: PrimaryAction | React.ReactNode;
+}) {
+  const {isNavigationCollapsed} = useMediaQuery();
+  const {newDesignLanguage} = useFeatures();
+  let content = primaryAction;
+  if (isPrimaryAction(primaryAction)) {
+    const primary =
+      primaryAction.primary === undefined ? true : primaryAction.primary;
+
+    content = buttonsFrom(
+      shouldShowIconOnly(
+        newDesignLanguage,
+        isNavigationCollapsed,
+        primaryAction,
+      ),
+      {
+        primary,
+      },
+    );
+  }
+
+  return (
+    <ConditionalWrapper
+      condition={newDesignLanguage === false}
+      wrapper={(children) => (
+        <div className={styles.PrimaryActionWrapper}>{children}</div>
+      )}
+    >
+      {content}
+    </ConditionalWrapper>
   );
 }
 
@@ -332,40 +365,4 @@ function determineLayout({
     layouts.desktopDefault;
 
   return layout.slots;
-}
-
-function getPrimaryActionMarkup(
-  primaryAction: PrimaryAction | React.ReactNode,
-  {
-    newDesignLanguage,
-    isNavigationCollapsed,
-  }: {newDesignLanguage: boolean; isNavigationCollapsed: boolean},
-) {
-  let content = primaryAction;
-  if (isPrimaryAction(primaryAction)) {
-    const primary =
-      primaryAction.primary === undefined ? true : primaryAction.primary;
-
-    content = buttonsFrom(
-      shouldShowIconOnly(
-        newDesignLanguage,
-        isNavigationCollapsed,
-        primaryAction,
-      ),
-      {
-        primary,
-      },
-    );
-  }
-
-  return (
-    <ConditionalWrapper
-      condition={newDesignLanguage === false}
-      wrapper={(children) => (
-        <div className={styles.PrimaryActionWrapper}>{children}</div>
-      )}
-    >
-      {content}
-    </ConditionalWrapper>
-  );
 }
