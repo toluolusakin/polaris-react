@@ -12,6 +12,7 @@ import {
 } from 'components';
 // eslint-disable-next-line no-restricted-imports
 import {mountWithAppProvider} from 'test-utilities/legacy';
+import {mountWithApp} from 'test-utilities';
 
 import type {LinkAction} from '../../../../../types';
 import {Header, HeaderProps} from '../Header';
@@ -100,13 +101,13 @@ describe('<Header />', () => {
     });
 
     it('renders a `ReactNode`', () => {
-      const primaryAction = <div>Hello</div>;
+      const PrimaryAction = () => null;
 
-      const header = mountWithAppProvider(
-        <Header {...mockProps} primaryAction={primaryAction} />,
+      const header = mountWithApp(
+        <Header {...mockProps} primaryAction={<PrimaryAction />} />,
       );
 
-      expect(header.contains(primaryAction)).toBeTruthy();
+      expect(header).toContainReactComponent(PrimaryAction);
     });
   });
 

@@ -166,9 +166,7 @@ class PageInner extends React.PureComponent<ComposedProps, never> {
     return {
       title,
       buttons: transformActions(appBridge, {
-        primaryAction: isPrimaryAction(primaryAction)
-          ? primaryAction
-          : undefined,
+        ...(isPrimaryAction(primaryAction) && {primaryAction}),
         secondaryActions,
         actionGroups,
       }),
